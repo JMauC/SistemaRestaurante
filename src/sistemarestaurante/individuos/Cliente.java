@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Scanner;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import sistemarestaurante.ferramentas.ConnectionFactory;
 
@@ -18,11 +19,12 @@ public class Cliente extends Pessoa {
                             "endereco, escolaridade, profissao) " +
                             "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement stmt = con.prepareStatement(sql);
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         
         stmt.setString(1, getCpf());
         stmt.setString(2, getNome());
         stmt.setString(3, getRg());
-        stmt.setDate(4, java.sql.Date.valueOf("2018-01-01")); // Gambiarra; pesquisar como arrumar depois
+        stmt.setDate(4, java.sql.Date.valueOf(formatter.format(getDataNascimento())));
         stmt.setString(5, getFiliacaoPai());
         stmt.setString(6, getFiliacaoMae());
         stmt.setString(7, getNaturalidade());

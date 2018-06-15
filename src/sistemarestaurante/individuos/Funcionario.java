@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import sistemarestaurante.ferramentas.ConnectionFactory;
 
@@ -24,13 +26,14 @@ public class Funcionario extends Pessoa {
                             "(cpf, nome, rg, data_nascimento, filiacao_pai, filiacao_mae, " +
                             "naturalidade, estado_civil, sexo_masculino, telefone, email, " +
                             "endereco, escolaridade, ctps, salario, turno_diurno, senha, cargo) " +
-                            "VALUES(?,?,?, DATE(?),?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
         PreparedStatement stmt = con.prepareStatement(sql);
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         
         stmt.setString(1, getCpf());
         stmt.setString(2, getNome());
         stmt.setString(3, getRg());
-        stmt.setDate(4, java.sql.Date.valueOf("2018-01-01")); // Gambiarra; pesquisar como arrumar depois
+        stmt.setDate(4, java.sql.Date.valueOf(formatter.format(getDataNascimento())));
         stmt.setString(5, getFiliacaoPai());
         stmt.setString(6, getFiliacaoMae());
         stmt.setString(7, getNaturalidade());
@@ -62,7 +65,8 @@ public class Funcionario extends Pessoa {
     public static void listaFuncionarios() throws SQLException{
         Connection con = new ConnectionFactory().getConexao();
         String sql = "SELECT cpf, nome, salario, turno_diurno, cargo " +
-                        "FROM funcionarios ORDER BY nome;";
+                        "FROM funcionarios ORDER BY nome " +
+                        "ORDER BY nome;";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         try {
@@ -102,7 +106,7 @@ public class Funcionario extends Pessoa {
                         "FROM funcionarios AS f " +
                             "INNER JOIN pedidos AS p " +
                             "ON f.cpf = p.cpf_garcom " +
-                        "GROUP BY f.cpf;";
+                        "GROUP BY f.cpf ORDER BY f.nome;";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         try {

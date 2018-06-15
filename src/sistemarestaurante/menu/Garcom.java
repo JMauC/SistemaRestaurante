@@ -4,7 +4,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import sistemarestaurante.estoque.Produto;
 import sistemarestaurante.ferramentas.ConnectionFactory;
@@ -14,7 +20,7 @@ import sistemarestaurante.servico.Pagamento;
 import sistemarestaurante.servico.Pedido;
 
 public class Garcom {
-    public static void menuPrincipal(String cpfUsuario) throws SQLException {
+    public static void menuPrincipal(String cpfUsuario) throws SQLException, ParseException {
         Scanner input = new Scanner(System.in);
         int opcao = -1;
 
@@ -58,7 +64,7 @@ public class Garcom {
         //input.close();
     }
 
-    public static void recepcionaCliente() throws SQLException {
+    public static void recepcionaCliente() throws SQLException, ParseException {
         Cliente cliente = new Cliente();
         Scanner input = new Scanner(System.in);
         String cpf = null;
@@ -75,7 +81,7 @@ public class Garcom {
     }
 
     
-    public static void cadastraCliente(String cpf) throws SQLException {
+    public static void cadastraCliente(String cpf) throws SQLException, ParseException {
         Scanner input = new Scanner(System.in);
         Cliente cliente = new Cliente();
 
@@ -89,8 +95,14 @@ public class Garcom {
         System.out.print("RG: ");
         cliente.setRg(input.nextLine());
         
-        //System.out.print("Data de nascimento: ");
-        //cliente.setDataNascimento(input.nextLine());
+        System.out.print("Data de nascimento [DD/MM/AAAA]: ");
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            cliente.setDataNascimento( (java.util.Date)formatter.parse(input.nextLine()));
+        } 
+        catch(ParseException e) {            
+            throw e;
+        }
         
         System.out.print("Nome do pai: ");
         cliente.setFiliacaoPai(input.nextLine());
@@ -216,19 +228,47 @@ public class Garcom {
     }
 
     
-    public static void recebePagamento(String cpfGarcom) throws SQLException {
+    public static void recebePagamento(String cpfGarcom) throws SQLException throws IOException {
         Scanner input = new Scanner(System.in);
         int codigoPedido;
-
+        double resultado=0;
+        String nome;
+        int qtd;
+        double preco;
+        FileWriter arq = new FileWriter("C:\\Users\\Public\\Documents\\notaFiscal.txt");
+        PrintWriter gravarArq = new PrintWriter(arq);
+        gravarArq.printf("Comprovante de pagamento\n O Comilão:\n");
         System.out.print("Digite o número do pedido: ");
         codigoPedido = Integer.parseInt(input.nextLine());
-
+        
+        
+        SELECT pe.codigo AS cod_pedido, 
+        pp_pr.nome AS produto, 
+        pp_pr.qtd_produto AS quantidade, 
+        pp_pr.preco AS preco_unitario ,
+        (pp_pr.qtd_produto * pp_pr.preco) AS preco_total
+         FROM pedidos AS pe
+        INNER JOIN(SELECT pp.cod_pedido, pp.cod_produto, pp.qtd_produto, pr.nome, pr.preco 
+        FROM pedido_produto AS pp 
+        INNER JOIN produtos AS pr 
+        ON pp.cod_produto = pr.codigo) AS pp_pr
+        ON pe.codigo = pp_pr.cod_pedido
+        setInt(1, codigoPedido)
+        WHERE pe.codigo = '?'
+        ORDER BY produto;
         Pagamento.insereBanco(codigoPedido);
         Pedido.marcaPedidoPago(codigoPedido);
+        nome= rs.getString("produto");
+        qtd=rs.getInt("quantidade");
+        preco=rs.getDouble("preco_total");
+        gravarArq.printf("%i x %s =%f", qtd,nome,preco);
+        resultado=resultado+preco;
         
+        
+        gravarArq.printf("total:%f\n Volte Sempre", resultado);
+        arq.close();
         System.out.printf("\nFoi recebido R$ %.2f do pedido de número %d.\n\n", 
                             Pedido.buscaConta(codigoPedido), codigoPedido);
 
         //input.close();
     }
-}

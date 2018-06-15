@@ -1,6 +1,7 @@
 package sistemarestaurante;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 
 import sistemarestaurante.ferramentas.Login;
 import sistemarestaurante.menu.Barman;
@@ -10,7 +11,7 @@ import sistemarestaurante.menu.Gerente;
 
 
 public class Main {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ParseException {
         Login login = new Login();
         int opcao;
 

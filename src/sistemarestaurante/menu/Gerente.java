@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import sistemarestaurante.administrativo.CustoEstoque;
@@ -16,7 +19,7 @@ import sistemarestaurante.individuos.Funcionario;
 import sistemarestaurante.servico.Pagamento;
 
 public class Gerente {
-    public static void menuPrincipal(String cpfUsuario) throws SQLException {
+    public static void menuPrincipal(String cpfUsuario) throws SQLException, ParseException {
         Scanner input = new Scanner(System.in);
         int opcao = -1;
 
@@ -142,7 +145,7 @@ public class Gerente {
     }
 
     //#########################################################################
-    public static void contrataFuncionario() {
+    public static void contrataFuncionario() throws ParseException, SQLException {
         Funcionario este=new Funcionario();
         Scanner input = new Scanner(System.in);
         String novo;
@@ -183,15 +186,15 @@ public class Gerente {
         outro=input.nextInt();
         if(outro==1)
         {
-            este.setSexoMasculino(true)
+            este.setSexoMasculino(true);
         }
         if(outro==2)
         {
-            este.setSexoMasculino(false)
+            este.setSexoMasculino(false);
         }
         System.out.println("Digite o telefone do novo funcionario");
         novo=input.nextLine();
-        este.setTelefone(novo)
+        este.setTelefone(novo);
         System.out.println("Digite o email do novo funcionario");
         novo=input.nextLine();
         este.setEmail(novo);
@@ -213,7 +216,7 @@ public class Gerente {
         {
             este.setTurnoDiurno(true);
         }
-        if(outro==1)
+        if(outro==2)
         {
             este.setTurnoDiurno(false);
         }
