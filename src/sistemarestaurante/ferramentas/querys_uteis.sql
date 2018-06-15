@@ -16,6 +16,21 @@ ON prod.codigo = ingr.cod_produto
 AND ingr.codigo = prod.cod_ingrediente
 ORDER BY prod.codigo, ingr.codigo;
 
+-- Relaciona pedidos mais frequentes por cliente
+SELECT pe_c.cpf, pe_c.nome, pp_pr.nome AS produto, SUM(pp_pr.qtd_produto)
+FROM (SELECT c.cpf, c.nome, pe.codigo AS cod_pedido
+	FROM pedidos AS pe
+	INNER JOIN clientes AS c
+	ON pe.cpf_cliente = c.cpf
+	WHERE pe.pedido_pago = true) AS pe_c
+INNER JOIN (SELECT pp.cod_pedido,pr.nome, pp.cod_produto, pp.qtd_produto
+		FROM pedido_produto AS pp
+		INNER JOIN produtos AS pr
+		ON pp.cod_produto = pr.codigo) AS pp_pr
+ON pe_c.cod_pedido = pp_pr.cod_pedido
+GROUP BY pe_c.cpf, pe_c.nome, pp_pr.nome
+ORDER BY pe_c.nome ASC, SUM(pp_pr.qtd_produto) DESC;
+
 -- Pedidos prontos
 SELECT cod_pedido FROM pedido_produto WHERE cod_pedido 
 	NOT IN (SELECT cod_pedido FROM pedido_produto 

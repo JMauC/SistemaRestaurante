@@ -72,7 +72,7 @@ public class CustoEstoque {
 				double precoUnitario = rs.getDouble("preco_unitario");
 				double precoTotal = precoUnitario * qtdIngrediente;
 
-                System.out.printf("|%s\t- %s\t\t- %s\t- %d\t- R$ %.2f\t- R$ %.2f|\n", 
+                System.out.printf("|%s\t- %s\t- %s\t- %d\t- R$ %.2f\t- R$ %.2f|\n", 
 									dataFormatada, cnpj, ingrediente, qtdIngrediente, 
 									precoUnitario, precoTotal);
             }

@@ -93,7 +93,7 @@ public class Mesa{
 
 	public static void desocupaMesa(int codigoMesa) throws SQLException {
 		Connection con = new ConnectionFactory().getConexao();
-		String sql = "UPDATE mesas SET ocupada = false, cpf_ocupante = null" +
+		String sql = "UPDATE mesas SET ocupada = false, cpf_ocupante = null " +
 						"WHERE codigo = ?;";
         PreparedStatement stmt = con.prepareStatement(sql);
 
@@ -112,6 +112,33 @@ public class Mesa{
             con.close();
         }
 	}
+
+
+	public static boolean verifMesaOcupada(int codigo) throws SQLException{
+        Connection con = new ConnectionFactory().getConexao();
+        String sql = "SELECT ocupada FROM mesas WHERE codigo = ?;";
+        PreparedStatement stmt = con.prepareStatement(sql);
+        boolean isOcupada = false;
+
+        stmt.setInt(1, codigo);
+
+        try {
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()) {
+                isOcupada = rs.getBoolean("ocupada");
+            }
+        }
+        catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            stmt.close();
+            con.close();
+        }
+        return isOcupada;
+    }
+
 
     /**
      * GET's e SET's das variaveis de classe

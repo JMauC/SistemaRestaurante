@@ -27,7 +27,7 @@ public class Fornecedor {
         try {
             ResultSet rs = stmt.executeQuery();
 
-            System.out.printf("\n\n|Codigo\t- CNPJ\t- Razao Social\t\t- Telefone - Endereco\t- e-mail|\n");
+            System.out.printf("\n\n|Codigo\t- CNPJ - Razao Social\t- Telefone - Endereco\t- e-mail|\n");
 
             while(rs.next()){
 				int codigo = rs.getInt("codigo");

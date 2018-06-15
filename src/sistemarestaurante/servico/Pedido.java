@@ -77,6 +77,7 @@ public class Pedido{
 
         try {
             stmt.executeUpdate();
+            Mesa.desocupaMesa(buscaMesa(codigo));
         }
         catch(SQLException e) {
             throw new RuntimeException(e);
@@ -192,6 +193,32 @@ public class Pedido{
             con.close();
         }
         return conta;
+    }
+
+
+    public static int buscaMesa(int codPedido) throws SQLException{
+        Connection con = new ConnectionFactory().getConexao();
+        String sql = "SELECT cod_mesa FROM pedidos WHERE codigo = ?;";
+        PreparedStatement stmt = con.prepareStatement(sql);
+        int codMesa = 0;
+
+        stmt.setInt(1, codPedido);
+
+        try {
+            ResultSet rs = stmt.executeQuery();
+            
+            if(rs.next()) {
+                codMesa = rs.getInt("cod_mesa");
+            }
+        }
+        catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            stmt.close();
+            con.close();
+        }
+        return codMesa;
     }
 
     
