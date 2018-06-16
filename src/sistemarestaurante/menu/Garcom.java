@@ -258,11 +258,23 @@ public class Garcom {
         ORDER BY produto;
         Pagamento.insereBanco(codigoPedido);
         Pedido.marcaPedidoPago(codigoPedido);
-        nome= rs.getString("produto");
-        qtd=rs.getInt("quantidade");
-        preco=rs.getDouble("preco_total");
-        gravarArq.printf("%i x %s =%f", qtd,nome,preco);
-        resultado=resultado+preco;
+          try {
+            ResultSet rs = stmt.executeQuery();
+              while(rs.next()){
+                   nome= rs.getString("produto");
+                   qtd=rs.getInt("quantidade");
+                   preco=rs.getDouble("preco_total");
+                   gravarArq.printf("%i x %s =%f", qtd,nome,preco);
+                   resultado=resultado+preco;
+              }
+        }
+        catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            stmt.close();
+            con.close();
+        }
         
         
         gravarArq.printf("total:%f\n Volte Sempre", resultado);
