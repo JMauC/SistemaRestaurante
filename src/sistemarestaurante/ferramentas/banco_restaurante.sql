@@ -139,14 +139,14 @@ ALTER TABLE public.pedido_produto
   OWNER TO restaurante;
 
 -- Tabela de registro de pagamentos de pedidos
-CREATE TABLE public.pagamentos(
+  CREATE TABLE public.pagamentos(
   codigo SERIAL PRIMARY KEY,
   cod_pedido INTEGER NOT null REFERENCES public.pedidos(codigo),
-  data DATE NOT null DEFAULT CURRENT_DATE,
+  data TIMESTAMP NOT null DEFAULT now()::timestamp without time zone,
   valor NUMERIC(10,2) NOT null DEFAULT 0.0
 );
 ALTER TABLE public.pagamentos
-  OWNER TO restaurante;
+OWNER TO restaurante;
 
 -- Tabela de custos de RH
 CREATE TABLE public.custos_rh(

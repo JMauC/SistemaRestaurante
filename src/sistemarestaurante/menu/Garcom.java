@@ -34,7 +34,7 @@ public class Garcom {
             System.out.println("[0] Sair.");
             System.out.println();
     
-            System.out.print("Digite a opção desejada: ");
+            System.out.print("Digite a opcao desejada: ");
             opcao = Integer.parseInt(input.nextLine());
 
             switch(opcao){
@@ -227,53 +227,53 @@ public class Garcom {
         }
     }
 
-    
     public static void recebePagamento(String cpfGarcom) throws SQLException, IOException {
         Connection con = new ConnectionFactory().getConexao();
-        String sql = "SELECT pe.codigo AS cod_pedido, pp_pr.nome AS produto, pp_pr.qtd_produto AS quantidade, pp_pr.preco AS preco_unitario ,(pp_pr.qtd_produto * pp_pr.preco) AS preco_total FROM pedidos AS pe INNER JOIN(SELECT pp.cod_pedido, pp.cod_produto, pp.qtd_produto, pr.nome, pr.preco FROM pedido_produto AS pp INNER JOIN produtos AS pr ON pp.cod_produto = pr.codigo) AS pp_pr ON pe.codigo = pp_pr.cod_pedido WHERE pe.codigo = '?' ORDER BY produto;";
+        String sql = "SELECT pe.codigo AS cod_pedido, " +
+                                "pp_pr.nome AS produto, " +
+                                "pp_pr.qtd_produto AS quantidade, " +
+                                "pp_pr.preco AS preco_unitario, " +
+                                "(pp_pr.qtd_produto * pp_pr.preco) AS preco_total " +
+                        "FROM pedidos AS pe " +
+                        "INNER JOIN (SELECT pp.cod_pedido, pp.cod_produto, pp.qtd_produto, pr.nome, pr.preco " +
+                                    "FROM pedido_produto AS pp " +
+                                    "INNER JOIN produtos AS pr " +
+                                    "ON pp.cod_produto = pr.codigo) AS pp_pr " +
+                        "ON pe.codigo = pp_pr.cod_pedido " +
+                        "WHERE pe.codigo = ? " +
+                        "ORDER BY produto;";
         PreparedStatement stmt = con.prepareStatement(sql);
         Scanner input = new Scanner(System.in);
         int codigoPedido;
-        double resultado=0;
-        String nome;
-        int qtd;
-        double preco;
-        FileWriter arq = new FileWriter("NFs/notaFiscal.txt");
-        PrintWriter gravarArq = new PrintWriter(arq);
-        gravarArq.printf("Comprovante de pagamento\n O Comilão:\n");
-        System.out.print("Digite o número do pedido: ");
+        double resultado = 0.0;
+        System.out.print("Digite o numero do pedido: ");
         codigoPedido = Integer.parseInt(input.nextLine());
         stmt.setInt(1, codigoPedido);
         
-        
-        /*SELECT pe.codigo AS cod_pedido, 
-        pp_pr.nome AS produto, 
-        pp_pr.qtd_produto AS quantidade, 
-        pp_pr.preco AS preco_unitario ,
-        (pp_pr.qtd_produto * pp_pr.preco) AS preco_total
-         FROM pedidos AS pe
-        INNER JOIN(SELECT pp.cod_pedido, pp.cod_produto, pp.qtd_produto, pr.nome, pr.preco 
-        FROM pedido_produto AS pp 
-        INNER JOIN produtos AS pr 
-        ON pp.cod_produto = pr.codigo) AS pp_pr
-        ON pe.codigo = pp_pr.cod_pedido
-        setInt(1, codigoPedido)
-        WHERE pe.codigo = '?'
-        ORDER BY produto;*/
-
-        Pagamento.insereBanco(codigoPedido);
-        Pedido.marcaPedidoPago(codigoPedido);
-          try {
+        try {
+            FileWriter arq = new FileWriter("NFs/notaFiscal_" + codigoPedido + ".txt");
+            PrintWriter gravarArq = new PrintWriter(arq);
+            gravarArq.printf("Comprovante de pagamento\r\n O Comilao:\r\n\r\n");
             ResultSet rs = stmt.executeQuery();
-              while(rs.next()){
-                   nome= rs.getString("produto");
-                   qtd=rs.getInt("quantidade");
-                   preco=rs.getDouble("preco_total");
-                   gravarArq.printf("%i x %s =%f", qtd,nome,preco);
-                   resultado=resultado+preco;
-              }
+            
+            while(rs.next()) {
+                String nome = rs.getString("produto");
+                int qtd = rs.getInt("quantidade");
+                double preco = rs.getDouble("preco_total");
+                gravarArq.printf("%d x %s = R$ %.2f\r\n", qtd, nome, preco);
+                resultado = resultado + preco;
+            }
+            
+            Pagamento.insereBanco(codigoPedido);
+            Pedido.marcaPedidoPago(codigoPedido);
+            
+            gravarArq.printf("Total: R$ %.2f.\r\n\r\nVolte Sempre!\r\n", resultado);
+            arq.close();
         }
         catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        catch(IOException e) {
             throw new RuntimeException(e);
         }
         finally {
@@ -281,12 +281,8 @@ public class Garcom {
             con.close();
         }
         
-        
-        gravarArq.printf("total:%f\n Volte Sempre", resultado);
-        arq.close();
-        System.out.printf("\nFoi recebido R$ %.2f do pedido de número %d.\n\n", 
+        System.out.printf("\nFoi recebido R$ %.2f do pedido de numero %d.\n\n", 
                             Pedido.buscaConta(codigoPedido), codigoPedido);
-
         //input.close();
     }
 }

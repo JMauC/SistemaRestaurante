@@ -14,11 +14,15 @@ import sistemarestaurante.menu.Gerente;
 public class Main {
     public static void main(String[] args) throws SQLException, ParseException, IOException {
         Login login = new Login();
-        int opcao;
+        int opcao = 0;
 
-        opcao = login.realizaLogin();
-        while(opcao!=0){
+        while(opcao!=-1){
+            opcao = login.realizaLogin();
             switch(opcao){
+                case -1:
+                System.out.println("Saindo do sistema...");
+                break;
+                
                 case 1:
                     Gerente.menuPrincipal(login.getCpfUsuario());
                     break;

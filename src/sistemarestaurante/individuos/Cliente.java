@@ -48,6 +48,42 @@ public class Cliente extends Pessoa {
         }
     }
 
+        public static void listaClientes() throws SQLException{
+        Connection con = new ConnectionFactory().getConexao();
+        String sql = "SELECT cpf, nome, rg, sexo_masculino, email FROM clientes ORDER BY nome;";
+                        //"FROM funcionarios ORDER BY nome " +
+                        //"ORDER BY nome;";
+        PreparedStatement stmt = con.prepareStatement(sql);
+
+        try {
+            ResultSet rs = stmt.executeQuery();
+
+            System.out.printf("\n\n|CPF\t\t- Nome\t\t- RG\t\t- Sexo\t- E-mail|\n");
+
+            while(rs.next()){
+                String cpf = rs.getString("cpf");
+                String nome = rs.getString("nome");
+                String rg = rs.getString("rg");
+                String email = rs.getString("email");
+                char sexo = 'F';
+                
+                if(rs.getBoolean("sexo_masculino")){
+                    sexo = 'M';
+                }
+
+                System.out.printf("|%s\t- %s\t- %s\t- %c\t- %s|\n", 
+                                    cpf, nome, rg, sexo, email);
+            }
+
+        }
+        catch(SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            stmt.close();
+            con.close();
+        }
+    }
 
     public static String buscaNome(String cpf) throws SQLException{
         Connection con = new ConnectionFactory().getConexao();
