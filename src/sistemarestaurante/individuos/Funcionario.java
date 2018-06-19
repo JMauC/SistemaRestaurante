@@ -64,15 +64,15 @@ public class Funcionario extends Pessoa {
 
     public static void listaFuncionarios() throws SQLException{
         Connection con = new ConnectionFactory().getConexao();
-        String sql = "SELECT cpf, nome, salario, turno_diurno, cargo " +
-                        "FROM funcionarios ORDER BY nome " +
-                        "ORDER BY nome;";
+        String sql = "SELECT cpf, nome, salario, turno_diurno, cargo FROM funcionarios ORDER BY nome;";
+                        //"FROM funcionarios ORDER BY nome " +
+                        //"ORDER BY nome;";
         PreparedStatement stmt = con.prepareStatement(sql);
 
         try {
             ResultSet rs = stmt.executeQuery();
 
-            System.out.printf("\n\n|CPF\t- Nome\t- Salario\t- Turno\t- Cargo|\n");
+            System.out.printf("\n\n|CPF\t\t- Nome\t- Salario\t- Turno\t- Cargo|\n");
 
             while(rs.next()){
                 String cpf = rs.getString("cpf");
@@ -112,7 +112,7 @@ public class Funcionario extends Pessoa {
         try {
             ResultSet rs = stmt.executeQuery();
 
-            System.out.printf("\n\n|CPF\t- Nome\t\t- Pedidos atendidos|\n");
+            System.out.printf("\n\n|CPF\t\t- Nome\t\t- Pedidos atendidos|\n");
 
             while(rs.next()){
                 String cpf = rs.getString("cpf");

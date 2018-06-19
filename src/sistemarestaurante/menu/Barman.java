@@ -24,7 +24,7 @@ public class Barman {
             System.out.println("[0] Sair.");
             System.out.println();
 
-            System.out.print("Digite a opção desejada: ");
+            System.out.print("Digite a opcao desejada: ");
             opcao = Integer.parseInt(input.nextLine());
             
             switch(opcao){
@@ -117,7 +117,7 @@ public class Barman {
                 Pedido.marcaProdutoPronto(codPedido, codProduto);
 
                 System.out.printf("\nFoi registrado o preparo de %d unidade(s) do produto " +
-                                    "%s referentes ao pedido número %d.\n", 
+                                    "%s referentes ao pedido numero %d.\n", 
                                     qtdProduto, produto, codPedido);
             }
         }

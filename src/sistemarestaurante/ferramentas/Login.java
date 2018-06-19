@@ -19,9 +19,16 @@ public class Login {
         String sql = "SELECT nome, cargo FROM funcionarios WHERE cpf = ? AND senha = ?;";
         PreparedStatement stmt = con.prepareStatement(sql);
         Scanner input = new Scanner(System.in);
+        System.out.println();
+        System.out.println();
+        System.out.println("Digite seu cpf para logar ou \"sair\" para fechar o programa.");
 
         System.out.print("Usuario: ");
         setCpfUsuario(input.nextLine());
+        //System.out.print(getCpfUsuario());
+        if (cpfUsuario.intern() == "sair"){
+            return -1;
+        }
         System.out.print("Senha: ");
         setSenha(input.nextLine());
         //input.close();

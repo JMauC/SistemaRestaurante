@@ -27,7 +27,7 @@ public class Fornecedor {
         try {
             ResultSet rs = stmt.executeQuery();
 
-            System.out.printf("\n\n|Codigo\t- CNPJ - Razao Social\t- Telefone - Endereco\t- e-mail|\n");
+            System.out.printf("\n\n|Codigo\t- CNPJ\t - Razao Social\t- Telefone - Endereco\t- e-mail|\n");
 
             while(rs.next()){
 				int codigo = rs.getInt("codigo");
@@ -37,7 +37,7 @@ public class Fornecedor {
                 String endereco = rs.getString("endereco");
                 String email = rs.getString("email");
                 
-                System.out.printf("|%d\t- %s\t\t- %s\t\t- %s\t- %s\t- %s|\n", 
+                System.out.printf("|%d\t- %s\t- %s\t- %s\t- %s\t- %s|\n", 
                                     codigo, cnpj, razaoSocial, telefone, endereco, email);
             }
         }

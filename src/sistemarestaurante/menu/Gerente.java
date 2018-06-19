@@ -15,6 +15,7 @@ import sistemarestaurante.administrativo.Fornecedor;
 import sistemarestaurante.estoque.Ingrediente;
 import sistemarestaurante.estoque.Produto;
 import sistemarestaurante.ferramentas.ConnectionFactory;
+import sistemarestaurante.individuos.Cliente;
 import sistemarestaurante.individuos.Funcionario;
 import sistemarestaurante.servico.Pagamento;
 
@@ -41,11 +42,13 @@ public class Gerente {
             System.out.println("[13] Consultar despesas estoque.");
             System.out.println("[14] Consultar despesas funcionarios.");
             System.out.println("[15] Consultar balanco.");
-            System.out.println("[16] Listar preferencias de clientes.");
+            System.out.println("[16] Cadastrar fornecedor.");
+            System.out.println("[17] Listar clientes cadastrados.");
+            System.out.println("[18] Listar preferencias de clientes.");
             System.out.println("[0] Sair.");
             System.out.println();
             
-            System.out.print("Digite a opção desejada: ");
+            System.out.print("Digite a opcao desejada: ");
             opcao = Integer.parseInt(input.nextLine());
             
             switch(opcao){
@@ -110,6 +113,14 @@ public class Gerente {
                     break;
 
                 case 16:
+                    cadastraFornecedor();
+                    break;
+
+                case 17:
+                    Cliente.listaClientes();
+                    break;
+
+                case 18:
                     listarPreferencias();
                     break;
 
@@ -144,6 +155,33 @@ public class Gerente {
         Fornecedor.listaFornecedores();
     }
 
+    public static void cadastraFornecedor() throws SQLException {
+        Scanner input = new Scanner(System.in);
+        Fornecedor fornecedor = new Fornecedor();
+
+        System.out.println("\n\nInsira abaixo as informacoes do novo fornecedor.\n");
+        
+        System.out.print("CNPJ: ");
+        fornecedor.setCnpj(input.nextLine());
+
+        System.out.print("Razao Social: ");
+        fornecedor.setRazaoSocial(input.nextLine());
+        
+        System.out.print("Telefone: ");
+        fornecedor.setTelefone(input.nextLine());
+        
+        System.out.print("Endereco: ");
+        fornecedor.setEndereco(input.nextLine());
+        
+        System.out.print("E-Mail: ");
+        fornecedor.setEmail(input.nextLine());
+        
+        fornecedor.insereBanco();
+        System.out.printf("\n\nO fornecedor %s foi cadastrado no sistema com o CNPJ %s.\n", 
+                            fornecedor.getRazaoSocial(), fornecedor.getCnpj());
+        //input.close();
+    }
+
     //#########################################################################
     public static void contrataFuncionario() throws ParseException, SQLException {
         Funcionario este=new Funcionario();
@@ -173,7 +211,7 @@ public class Gerente {
         System.out.println("Digite o nome do pai do novo funcionario");
         novo=input.nextLine();
         este.setFiliacaoPai(novo);
-        System.out.println("Digite o nome da mãe do novo funcionario");
+        System.out.println("Digite o nome da mae do novo funcionario");
         novo=input.nextLine();
         este.setFiliacaoMae(novo);
         System.out.println("Digite o pais do novo funcionario");
@@ -365,7 +403,7 @@ public class Gerente {
         double receitaTotal = Pagamento.buscaReceitaTotal();
         double balanco = receitaTotal - custosEstoque - custosRH;
 
-        System.out.printf("\n\n|Custos de Estoque - Custos de RH - Total de Receitas - Balanço|\n");
+        System.out.printf("\n\n|Custos de Estoque - Custos de RH - Total de Receitas - Balanco|\n");
         System.out.printf("|R$ %.2f\t- R$ %.2f\t- R$ %.2f\t- R$ %.2f|\n",
                             custosEstoque, custosRH, receitaTotal, balanco);
     }

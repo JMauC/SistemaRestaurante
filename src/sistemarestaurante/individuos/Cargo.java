@@ -1,4 +1,4 @@
-package sistemarestaurante.servico;
+package sistemarestaurante.individuos;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
