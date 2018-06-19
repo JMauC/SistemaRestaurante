@@ -20,7 +20,7 @@ import sistemarestaurante.servico.Pagamento;
 import sistemarestaurante.servico.Pedido;
 
 public class Garcom {
-    public static void menuPrincipal(String cpfUsuario) throws SQLException, ParseException {
+    public static void menuPrincipal(String cpfUsuario) throws SQLException, ParseException, IOException {
         Scanner input = new Scanner(System.in);
         int opcao = -1;
 
@@ -228,21 +228,25 @@ public class Garcom {
     }
 
     
-    public static void recebePagamento(String cpfGarcom) throws SQLException throws IOException {
+    public static void recebePagamento(String cpfGarcom) throws SQLException, IOException {
+        Connection con = new ConnectionFactory().getConexao();
+        String sql = "SELECT pe.codigo AS cod_pedido, pp_pr.nome AS produto, pp_pr.qtd_produto AS quantidade, pp_pr.preco AS preco_unitario ,(pp_pr.qtd_produto * pp_pr.preco) AS preco_total FROM pedidos AS pe INNER JOIN(SELECT pp.cod_pedido, pp.cod_produto, pp.qtd_produto, pr.nome, pr.preco FROM pedido_produto AS pp INNER JOIN produtos AS pr ON pp.cod_produto = pr.codigo) AS pp_pr ON pe.codigo = pp_pr.cod_pedido WHERE pe.codigo = '?' ORDER BY produto;";
+        PreparedStatement stmt = con.prepareStatement(sql);
         Scanner input = new Scanner(System.in);
         int codigoPedido;
         double resultado=0;
         String nome;
         int qtd;
         double preco;
-        FileWriter arq = new FileWriter("C:\\Users\\Public\\Documents\\notaFiscal.txt");
+        FileWriter arq = new FileWriter("NFs/notaFiscal.txt");
         PrintWriter gravarArq = new PrintWriter(arq);
         gravarArq.printf("Comprovante de pagamento\n O Comilão:\n");
         System.out.print("Digite o número do pedido: ");
         codigoPedido = Integer.parseInt(input.nextLine());
+        stmt.setInt(1, codigoPedido);
         
         
-        SELECT pe.codigo AS cod_pedido, 
+        /*SELECT pe.codigo AS cod_pedido, 
         pp_pr.nome AS produto, 
         pp_pr.qtd_produto AS quantidade, 
         pp_pr.preco AS preco_unitario ,
@@ -255,7 +259,8 @@ public class Garcom {
         ON pe.codigo = pp_pr.cod_pedido
         setInt(1, codigoPedido)
         WHERE pe.codigo = '?'
-        ORDER BY produto;
+        ORDER BY produto;*/
+
         Pagamento.insereBanco(codigoPedido);
         Pedido.marcaPedidoPago(codigoPedido);
           try {
