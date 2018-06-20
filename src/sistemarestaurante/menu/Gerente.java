@@ -199,7 +199,7 @@ public class Gerente {
         System.out.println("Digite o rg do novo funcionario");
         novo=input.nextLine();
         este.setRg(novo);
-        System.out.println("Digite a dada de nacimentodo novo funcionario no formato dia/mes/ano como o exemplo:20/02/1996");
+        System.out.println("Digite a data de nascimento do novo funcionario no formato dia/mes/ano como o exemplo:20/02/1996");
         novo=input.nextLine();
          try {
             DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -217,17 +217,14 @@ public class Gerente {
         System.out.println("Digite o pais do novo funcionario");
         novo=input.nextLine();
         este.setNaturalidade(novo);
-        System.out.println("Digite o estado civl do novo funcionario");
+        System.out.println("Digite o estado civil do novo funcionario");
         novo=input.nextLine();
         este.setEstadoCivil(novo);
         System.out.println("Digite o 1 caso o novo funcionario seja homem e 2 caso seja mulher");
-        outro=input.nextInt();
-        if(outro==1)
-        {
+        if(Integer.parseInt(input.nextLine()) == 1){
             este.setSexoMasculino(true);
         }
-        if(outro==2)
-        {
+        else{
             este.setSexoMasculino(false);
         }
         System.out.println("Digite o telefone do novo funcionario");
@@ -242,7 +239,7 @@ public class Gerente {
         System.out.println("Digite o grau de escolaridade do novo funcionario");
         novo=input.nextLine();
         este.setEscolaridade(novo);
-        System.out.println("Digite a carteirade trabalho do novo funcionario");
+        System.out.println("Digite o numero da carteira de trabalho do novo funcionario");
         novo=input.nextLine();
         este.setCtps(novo);
         System.out.println("Digite o salario do novo funcionario");
@@ -254,15 +251,19 @@ public class Gerente {
         {
             este.setTurnoDiurno(true);
         }
-        if(outro==2)
+        else
         {
             este.setTurnoDiurno(false);
         }
         System.out.println("Digite a senha inicial do novo funcionario");
         novo=input.nextLine();
         este.setSenha(novo) ;
+        System.out.println("1 - Gerente");
+        System.out.println("2 - Garcom");
+        System.out.println("3 - Cozinheiro");
+        System.out.println("4 - Barman");
         System.out.println("Digite o cargo do novo funcionario");
-        outro=input.nextInt();
+        outro=Integer.parseInt(input.nextLine());
         este.setCodigoCargo(outro);
         este.insereBanco();
     }
